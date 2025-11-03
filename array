@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Numeri Casuali</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f6f7fb;
+            padding: 20px;
+        }
+        .box {
+            background: white;
+            padding: 16px;
+            border-radius: 10px;
+            box-shadow: 0 0 8px rgba(0,0,0,0.08);
+            max-width: 900px;
+            margin: 0 auto 20px auto;
+        }
+        h2, h3 {
+            color: #2a64c5;
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: none;
+            background: #2a64c5;
+            color: white;
+            cursor: pointer;
+            margin-bottom: 15px;
+        }
+        #griglia, #oltre50 {
+            display: grid;
+            gap: 6px;
+            margin-top: 10px;
+        }
+        #griglia {
+            grid-template-columns: repeat(10, 1fr);
+        }
+        #oltre50 {
+            grid-template-columns: repeat(5, 1fr);
+        }
+        .cella {
+            padding: 6px;
+            background-color: #f2f4fb;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 13px;
+        }
+        p {
+            font-weight: bold;
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="box">
+    <h2>Numeri casuali da -100 a 100</h2>
+    <button onclick="genera()">Genera Numeri</button>
+
+    <p id="media"></p>
+    <p id="max"></p>
+    <p id="min"></p>
+    <p id="conta50"></p>
+
+    <h3>Tutti i numeri:</h3>
+    <div id="griglia"></div>
+
+    <h3>Numeri maggiori di 50:</h3>
+    <div id="oltre50"></div>
+</div>
+
+<script>
+    function genera() {
+        var numeri = [];
+        for (var i = 0; i < 100; i++) {
+            var n = Math.random() * 200 - 100;
+            n = Math.round(n * 100) / 100;
+            numeri.push(n);
+        }
+
+        var somma = 0;
+        var max = numeri[0];
+        var min = numeri[0];
+        var maggiori50 = [];
+
+        for (var i = 0; i < numeri.length; i++) {
+            somma += numeri[i];
+            if (numeri[i] > max) max = numeri[i];
+            if (numeri[i] < min) min = numeri[i];
+            if (numeri[i] > 50) maggiori50.push(numeri[i]);
+        }
+
+        var media = Math.round((somma / numeri.length) * 100) / 100;
+
+        document.getElementById("media").innerHTML = "Media: " + media;
+        document.getElementById("max").innerHTML = "Massimo: " + max;
+        document.getElementById("min").innerHTML = "Minimo: " + min;
+        document.getElementById("conta50").innerHTML = "Numeri > 50: " + maggiori50.length;
+
+        var griglia = document.getElementById("griglia");
+        griglia.innerHTML = "";
+        for (var i = 0; i < numeri.length; i++) {
+            griglia.innerHTML += "<div class='cella'>" + numeri[i] + "</div>";
+        }
+
+        var div50 = document.getElementById("oltre50");
+        div50.innerHTML = "";
+        for (var i = 0; i < maggiori50.length; i++) {
+            div50.innerHTML += "<div class='cella'>" + maggiori50[i] + "</div>";
+        }
+    }
+</script>
+
+</body>
+</html>
