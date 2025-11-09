@@ -1,118 +1,70 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <title>Numeri Casuali</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f6f7fb;
-            padding: 20px;
-        }
-        .box {
-            background: white;
-            padding: 16px;
-            border-radius: 10px;
-            box-shadow: 0 0 8px rgba(0,0,0,0.08);
-            max-width: 900px;
-            margin: 0 auto 20px auto;
-        }
-        h2, h3 {
-            color: #2a64c5;
-            margin-bottom: 10px;
-        }
-        button {
-            padding: 8px 12px;
-            border-radius: 6px;
-            border: none;
-            background: #2a64c5;
-            color: white;
-            cursor: pointer;
-            margin-bottom: 15px;
-        }
-        #griglia, #oltre50 {
-            display: grid;
-            gap: 6px;
-            margin-top: 10px;
-        }
-        #griglia {
-            grid-template-columns: repeat(10, 1fr);
-        }
-        #oltre50 {
-            grid-template-columns: repeat(5, 1fr);
-        }
-        .cella {
-            padding: 6px;
-            background-color: #f2f4fb;
-            border-radius: 6px;
-            text-align: center;
-            font-size: 13px;
-        }
-        p {
-            font-weight: bold;
-            margin: 5px 0;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Numeri Casuali</title>
+<style>
+body {
+  background-color: #121212;
+  color: #eee;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0 20px;
+}
+header {
+  padding: 40px 0 20px;
+  text-align: center;
+  border-bottom: 2px solid #ff4757;
+}
+h1 { color:#ff6b81; }
+main { margin-top:30px; }
+button {
+  padding:8px 12px; border-radius:6px; border:none; background:#ff4757; color:#fff; cursor:pointer; margin-bottom:10px;
+}
+button:hover { background:#ff6b81; }
+#griglia div, #oltre50 div {
+  padding:6px; border-radius:6px; text-align:center; margin-bottom:4px;
+}
+#griglia div { background:#1e1e1e; }
+#oltre50 div { background:#ff4757; color:#fff; }
+</style>
 </head>
 <body>
+<header><h1>Numeri Casuali</h1></header>
+<main>
+  <button onclick="genera()">Genera 100 numeri casuali da -100 a 100</button>
+  <p id="media"></p>
+  <p id="max"></p>
+  <p id="min"></p>
+  <p id="conta50"></p>
 
-<div class="box">
-    <h2>Numeri casuali da -100 a 100</h2>
-    <button onclick="genera()">Genera Numeri</button>
+  <h3>Tutti i numeri:</h3>
+  <div id="griglia" style="display:grid;grid-template-columns:repeat(10,1fr);gap:6px;"></div>
 
-    <p id="media"></p>
-    <p id="max"></p>
-    <p id="min"></p>
-    <p id="conta50"></p>
-
-    <h3>Tutti i numeri:</h3>
-    <div id="griglia"></div>
-
-    <h3>Numeri maggiori di 50:</h3>
-    <div id="oltre50"></div>
-</div>
+  <h3>Numeri maggiori di 50:</h3>
+  <div id="oltre50" style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;"></div>
+</main>
 
 <script>
-    function genera() {
-        var numeri = [];
-        for (var i = 0; i < 100; i++) {
-            var n = Math.random() * 200 - 100;
-            n = Math.round(n * 100) / 100;
-            numeri.push(n);
-        }
+function genera() {
+  var numeri=[]; for(var i=0;i<100;i++){ numeri.push(Math.round((Math.random()*200-100)*100)/100); }
+  var somma=0, max=numeri[0], min=numeri[0], maggiori50=[];
+  for(var i=0;i<numeri.length;i++){
+    somma+=numeri[i]; if(numeri[i]>max) max=numeri[i]; if(numeri[i]<min) min=numeri[i]; if(numeri[i]>50) maggiori50.push(numeri[i]);
+  }
+  var media=Math.round((somma/numeri.length)*100)/100;
+  document.getElementById("media").innerHTML="Media: "+media;
+  document.getElementById("max").innerHTML="Massimo: "+max;
+  document.getElementById("min").innerHTML="Minimo: "+min;
+  document.getElementById("conta50").innerHTML="Numeri > 50: "+maggiori50.length;
 
-        var somma = 0;
-        var max = numeri[0];
-        var min = numeri[0];
-        var maggiori50 = [];
+  var griglia=document.getElementById("griglia"); griglia.innerHTML="";
+  numeri.forEach(n=>griglia.innerHTML+="<div>"+n+"</div>");
 
-        for (var i = 0; i < numeri.length; i++) {
-            somma += numeri[i];
-            if (numeri[i] > max) max = numeri[i];
-            if (numeri[i] < min) min = numeri[i];
-            if (numeri[i] > 50) maggiori50.push(numeri[i]);
-        }
-
-        var media = Math.round((somma / numeri.length) * 100) / 100;
-
-        document.getElementById("media").innerHTML = "Media: " + media;
-        document.getElementById("max").innerHTML = "Massimo: " + max;
-        document.getElementById("min").innerHTML = "Minimo: " + min;
-        document.getElementById("conta50").innerHTML = "Numeri > 50: " + maggiori50.length;
-
-        var griglia = document.getElementById("griglia");
-        griglia.innerHTML = "";
-        for (var i = 0; i < numeri.length; i++) {
-            griglia.innerHTML += "<div class='cella'>" + numeri[i] + "</div>";
-        }
-
-        var div50 = document.getElementById("oltre50");
-        div50.innerHTML = "";
-        for (var i = 0; i < maggiori50.length; i++) {
-            div50.innerHTML += "<div class='cella'>" + maggiori50[i] + "</div>";
-        }
-    }
+  var div50=document.getElementById("oltre50"); div50.innerHTML="";
+  maggiori50.forEach(n=>div50.innerHTML+="<div>"+n+"</div>");
+}
 </script>
-
 </body>
 </html>
