@@ -1,1 +1,220 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>anagraficautenteseconda</title>
+<style>
+body {
+  background-color: #121212;
+  color: #eee;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 20px;
+}
+h2 {
+  border-bottom: 2px solid #ff4757;
+  padding-bottom: 10px;
+  color: #ff6b81;
+  margin-top: 0;
+}
+label {
+  display: block;
+  margin-top: 12px;
+}
+input[type="text"], select {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  border-radius: 6px;
+  border: 1px solid #555;
+  background-color: #1e1e1e;
+  color: #eee;
+}
+.gruppo-radio label, .gruppo-checkbox label {
+  display: inline-block;
+  margin-right: 10px;
+  font-weight: normal;
+}
+select[multiple] {
+  height: 100px;
+}
+button {
+  margin-top: 20px;
+  padding: 10px 15px;
+  width: 100%;
+  border: none;
+  border-radius: 6px;
+  background-color: #ff4757;
+  color: #fff;
+  cursor: pointer;
+  font-size: 16px;
+}
+button:hover {
+  background-color: #ff6b81;
+}
+#output2 {
+  margin-top: 25px;
+  padding: 15px;
+  background-color: #1e1e1e;
+  border-radius: 8px;
+  color: #fff;
+}
+#output2 p {
+  margin: 8px 0;
+}
+</style>
+</head>
+<body>
+
+<main>
+  <section id="anagraficautenteseconda">
+    <h2>anagrafica utente seconda</h2>
+
+    <label>nome:</label>
+    <input type="text" id="nome2">
+
+    <label>cognome:</label>
+    <input type="text" id="cognome2">
+
+    <label>indirizzo:</label>
+    <input type="text" id="indirizzo2">
+
+    <label>città:</label>
+    <input type="text" id="citta2">
+
+    <label>cap:</label>
+    <input type="text" id="cap2">
+
+    <label>anno di nascita:</label>
+    <input type="text" id="anno2" placeholder="es: 1985">
+
+    <label>sesso:</label>
+    <div class="gruppo-radio">
+      <label><input type="radio" name="sesso2" value="maschio"> maschio</label>
+      <label><input type="radio" name="sesso2" value="femmina"> femmina</label>
+      <label><input type="radio" name="sesso2" value="altro"> altro</label>
+    </div>
+
+    <label>provincia:</label>
+    <select id="provincia2">
+      <option value="">-- seleziona provincia --</option>
+      <optgroup label="campania">
+        <option value="NA">napoli</option>
+        <option value="SA">salerno</option>
+        <option value="AV">avellino</option>
+        <option value="BN">benevento</option>
+        <option value="CE">caserta</option>
+      </optgroup>
+      <optgroup label="lazio">
+        <option value="RM">roma</option>
+        <option value="FR">frosinone</option>
+        <option value="LT">latina</option>
+        <option value="RI">rieti</option>
+        <option value="VT">viterbo</option>
+      </optgroup>
+      <optgroup label="lombardia">
+        <option value="MI">milano</option>
+        <option value="BG">bergamo</option>
+        <option value="BS">brescia</option>
+        <option value="CO">como</option>
+        <option value="VA">varese</option>
+      </optgroup>
+    </select>
+
+    <label>mezzi di locomozione in famiglia:</label>
+    <div class="gruppo-checkbox">
+      <label><input type="checkbox" value="auto"> auto</label>
+      <label><input type="checkbox" value="moto"> moto</label>
+      <label><input type="checkbox" value="bici"> bici</label>
+      <label><input type="checkbox" value="aereo"> aereo</label>
+      <label><input type="checkbox" value="yacht"> yacht</label>
+    </div>
+
+    <label>materie preferite (max 3):</label>
+    <select id="materie2" multiple>
+      <option>matematica</option>
+      <option>italiano</option>
+      <option>informatica</option>
+      <option>tps</option>
+      <option>inglese</option>
+      <option>storia</option>
+      <option>scienze</option>
+      <option>arte</option>
+      <option>musica</option>
+    </select>
+
+    <button onclick="mostraDati2()">mostra dati</button>
+
+    <div id="output2">
+      i tuoi dati appariranno qui.
+    </div>
+
+  </section>
+</main>
+
+<script>
+function mostraDati2() {
+  var nome = document.getElementById("nome2").value;
+  var cognome = document.getElementById("cognome2").value;
+  var indirizzo = document.getElementById("indirizzo2").value;
+  var citta = document.getElementById("citta2").value;
+  var cap = document.getElementById("cap2").value;
+  var anno = document.getElementById("anno2").value;
+  var provincia = document.getElementById("provincia2").value;
+
+  var sessoSel = document.querySelector('input[name="sesso2"]:checked');
+  var sesso = sessoSel ? sessoSel.value : "non specificato";
+
+  var mezzi = [];
+  document.querySelectorAll('.gruppo-checkbox input[type="checkbox"]:checked').forEach(function(el){
+    mezzi.push(el.value);
+  });
+  var mezziPosseduti = mezzi.length > 0 ? mezzi.join(", ") : "nessuno";
+
+  var materieSel = Array.from(document.getElementById("materie2").selectedOptions).map(o=>o.text);
+  if(materieSel.length>3){
+    alert("puoi selezionare al massimo 3 materie!");
+    return;
+  }
+  var materiePref = materieSel.length>0 ? materieSel.join(", ") : "nessuna";
+
+  var eta = "";
+  var generazione = "";
+  if(anno && !isNaN(anno)){
+    var annoNum = parseInt(anno);
+    var annoCorrente = new Date().getFullYear();
+    eta = annoCorrente - annoNum;
+    if(annoNum>=2013) generazione="generazione alpha";
+    else if(annoNum>=1997) generazione="generazione z";
+    else if(annoNum>=1981) generazione="millennials";
+    else if(annoNum>=1965) generazione="generazione x";
+    else if(annoNum>=1946) generazione="baby boomers";
+    else generazione="generazione silenziosa";
+  }else{
+    eta="anno non valido";
+    generazione="—";
+  }
+
+  var risultato="";
+  risultato += "<p><strong>nome:</strong> "+nome+"</p>";
+  risultato += "<p><strong>cognome:</strong> "+cognome+"</p>";
+  risultato += "<p><strong>indirizzo:</strong> "+indirizzo+"</p>";
+  risultato += "<p><strong>città:</strong> "+citta+"</p>";
+  risultato += "<p><strong>provincia:</strong> "+provincia+"</p>";
+  risultato += "<p><strong>cap:</strong> "+cap+"</p>";
+  risultato += "<p><strong>anno di nascita:</strong> "+anno+"</p>";
+  risultato += "<p><strong>sesso:</strong> "+sesso+"</p>";
+  risultato += "<p><strong>età:</strong> "+eta+"</p>";
+  risultato += "<p><strong>generazione:</strong> "+generazione+"</p>";
+  risultato += "<p><strong>mezzi posseduti:</strong> "+mezziPosseduti+"</p>";
+  risultato += "<p><strong>materie preferite:</strong> "+materiePref+"</p>";
+
+  document.getElementById("output2").innerHTML=risultato;
+}
+</script>
+
+</body>
+</html>
+
 
