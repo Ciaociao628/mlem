@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Anagrafica Persona Collection</title>
+<style>
+body {
+  background-color: #121212;
+  color: #eee;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 20px;
+}
+h2 {
+  border-bottom: 2px solid #ff4757;
+  padding-bottom: 10px;
+  color: #ff6b81;
+  margin-top: 0;
+}
+label {
+  display: block;
+  margin-top: 12px;
+}
+input[type="text"], select {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  border-radius: 6px;
+  border: 1px solid #555;
+  background-color: #1e1e1e;
+  color: #eee;
+}
+.gruppo-radio label, .gruppo-checkbox label {
+  display: inline-block;
+  margin-right: 10px;
+  font-weight: normal;
+}
+button {
+  margin-top: 20px;
+  padding: 10px 15px;
+  width: 100%;
+  border: none;
+  border-radius: 6px;
+  background-color: #ff4757;
+  color: #fff;
+  cursor: pointer;
+  font-size: 16px;
+}
+button:hover {
+  background-color: #ff6b81;
+}
+#output {
+  margin-top: 25px;
+  padding: 15px;
+  background-color: #1e1e1e;
+  border-radius: 8px;
+  color: #fff;
+}
+#output p {
+  margin: 8px 0;
+}
+</style>
+</head>
+<body>
+
+<main>
+  <section>
+    <h2>Anagrafica Terza</h2>
+
+    <label>nome:</label>
+    <input type="text" id="nome">
+
+    <label>cognome:</label>
+    <input type="text" id="cognome">
+
+    <label>città:</label>
+    <input type="text" id="citta">
+
+    <label>anno di nascita:</label>
+    <input type="text" id="anno" placeholder="es: 2000">
+
+    <label>sesso:</label>
+    <div class="gruppo-radio">
+      <label><input type="radio" name="sesso" value="maschio"> maschio</label>
+      <label><input type="radio" name="sesso" value="femmina"> femmina</label>
+      <label><input type="radio" name="sesso" value="altro"> altro</label>
+    </div>
+
+    <button onclick="mostraPersona()">mostra dati</button>
+
+    <div id="output">inserisci i dati della persona</div>
+
+  </section>
+</main>
+
+<script>
+function mostraPersona(){
+  var persona = {
+    nome: document.getElementById("nome").value,
+    cognome: document.getElementById("cognome").value,
+    citta: document.getElementById("citta").value,
+    anno: document.getElementById("anno").value,
+    sesso: (function(){
+      var s = document.querySelector('input[name="sesso"]:checked');
+      return s ? s.value : "non specificato";
+    })()
+  };
+
+  var eta = "";
+  if(persona.anno && !isNaN(persona.anno)){
+    var annoNum = parseInt(persona.anno);
+    var annoCorrente = new Date().getFullYear();
+    eta = annoCorrente - annoNum;
+  } else {
+    eta = "anno non valido";
+  }
+
+  var risultato = "";
+  risultato += "<p><strong>nome:</strong> " + persona.nome + "</p>";
+  risultato += "<p><strong>cognome:</strong> " + persona.cognome + "</p>";
+  risultato += "<p><strong>città:</strong> " + persona.citta + "</p>";
+  risultato += "<p><strong>anno di nascita:</strong> " + persona.anno + "</p>";
+  risultato += "<p><strong>sesso:</strong> " + persona.sesso + "</p>";
+  risultato += "<p><strong>età:</strong> " + eta + "</p>";
+
+  document.getElementById("output").innerHTML = risultato;
+}
+</script>
+
+</body>
+</html>
