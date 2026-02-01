@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validazione Form JavaScript</title>
+    <style>
+        /* parte grafica fatta con gpt */
+        :root {
+            --color-bg-base: #0f172a;
+            --color-surface: #1e293b;
+            --color-text-primary: #f1f5f9;
+            --color-text-secondary: #cbd5e1;
+            --color-primary: #38bdf8;
+            --color-primary-hover: #0ea5e9;
+            --color-error: #ef4444;
+            --color-success: #10b981;
+            --color-border: rgba(203, 213, 225, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--color-bg-base);
+            color: var(--color-text-primary);
+            padding: 2rem;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 500px;
+            width: 100%;
+            background: var(--color-surface);
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--color-primary);
+            font-size: 1.8rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--color-text-secondary);
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--color-border);
+            border-radius: 8px;
+            background: var(--color-bg-base);
+            color: var(--color-text-primary);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.1);
+        }
+
+        input.error {
+            border-color: var(--color-error);
+        }
+
+        input.success {
+            border-color: var(--color-success);
+        }
+
+        .error-message {
+            color: var(--color-error);
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .password-requirements {
+            background: rgba(56, 189, 248, 0.1);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 0.5rem;
+            font-size: 0.85rem;
+        }
+
+        .password-requirements ul {
+            margin-left: 1.2rem;
+            margin-top: 0.5rem;
+        }
+
+        .password-requirements li {
+            color: var(--color-text-secondary);
+            margin-bottom: 0.3rem;
+        }
+
+        .requirement-met {
+            color: var(--color-success) !important;
+        }
+
+        button {
+            width: 100%;
+            padding: 1rem;
+            background: var(--color-primary);
+            color: var(--color-bg-base);
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        button:hover {
+            background: var(--color-primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(56, 189, 248, 0.3);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .success-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--color-surface);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            text-align: center;
+        }
+
+        .success-modal.show {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -60%);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%);
+            }
+        }
+
+        .success-modal h2 {
+            color: var(--color-success);
+            margin-bottom: 1rem;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 999;
+        }
+
+        .overlay.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Form di Registrazione</h1>
+        <form id="registrationForm" novalidate>
+            <div class="form-group">
+                <label for="nome">Nome *</label>
+                <input type="text" id="nome" name="nome" required>
+                <div class="error-message" id="nomeError">Il nome è obbligatorio</div>
+            </div>
+
+            <div class="form-group">
+                <label for="cognome">Cognome *</label>
+                <input type="text" id="cognome" name="cognome" required>
+                <div class="error-message" id="cognomeError">Il cognome è obbligatorio</div>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email *</label>
+                <input type="email" id="email" name="email" required>
+                <div class="error-message" id="emailError">Inserisci un'email valida</div>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password *</label>
+                <input type="password" id="password" name="password" required>
+                <div class="error-message" id="passwordError">La password non soddisfa i requisiti</div>
+                <div class="password-requirements">
+                    <strong>Requisiti password:</strong>
+                    <ul>
+                        <li id="req-length">Almeno 8 caratteri</li>
+                        <li id="req-uppercase">Primo carattere maiuscolo</li>
+                        <li id="req-special">Almeno un carattere speciale (@, #, ?, $, -, _)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <button type="submit">Registrati</button>
+        </form>
+    </div>
+
+    <div class="overlay" id="overlay"></div>
+    <div class="success-modal" id="successModal">
+        <h2>✓ Registrazione completata!</h2>
+        <p>I dati sono stati validati correttamente.</p>
+        <button onclick="closeModal()">Chiudi</button>
+    </div>
+
+    <script>
+        const form = document.getElementById('registrationForm');
+        const nome = document.getElementById('nome');
+        const cognome = document.getElementById('cognome');
+        const email = document.getElementById('email');
+        const password = document.getElementById('password');
+
+        nome.addEventListener('blur', () => validateField(nome, 'nomeError'));
+        cognome.addEventListener('blur', () => validateField(cognome, 'cognomeError'));
+        email.addEventListener('blur', () => validateEmail());
+        password.addEventListener('input', () => validatePassword());
+
+        function validateField(field, errorId) {
+            const errorElement = document.getElementById(errorId);
+            if (field.value.trim() === '') {
+                field.classList.add('error');
+                field.classList.remove('success');
+                errorElement.classList.add('show');
+                return false;
+            } else {
+                field.classList.remove('error');
+                field.classList.add('success');
+                errorElement.classList.remove('show');
+                return true;
+            }
+        }
+
+        function validateEmail() {
+            const errorElement = document.getElementById('emailError');
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            
+            if (!emailPattern.test(email.value)) {
+                email.classList.add('error');
+                email.classList.remove('success');
+                errorElement.classList.add('show');
+                return false;
+            } else {
+                email.classList.remove('error');
+                email.classList.add('success');
+                errorElement.classList.remove('show');
+                return true;
+            }
+        }
+
+        function validatePassword() {
+            const errorElement = document.getElementById('passwordError');
+            const value = password.value;
+            
+            // Requisiti
+            const hasMinLength = value.length >= 8;
+            const hasUppercaseFirst = /^[A-Z]/.test(value);
+            const hasSpecialChar = /[@#?$\-_]/.test(value);
+            
+            updateRequirement('req-length', hasMinLength);
+            updateRequirement('req-uppercase', hasUppercaseFirst);
+            updateRequirement('req-special', hasSpecialChar);
+            
+            const isValid = hasMinLength && hasUppercaseFirst && hasSpecialChar;
+            
+            if (value === '') {
+                password.classList.remove('error', 'success');
+                errorElement.classList.remove('show');
+                return false;
+            } else if (!isValid) {
+                password.classList.add('error');
+                password.classList.remove('success');
+                errorElement.classList.add('show');
+                return false;
+            } else {
+                password.classList.remove('error');
+                password.classList.add('success');
+                errorElement.classList.remove('show');
+                return true;
+            }
+        }
+
+        function updateRequirement(reqId, isMet) {
+            const element = document.getElementById(reqId);
+            if (isMet) {
+                element.classList.add('requirement-met');
+            } else {
+                element.classList.remove('requirement-met');
+            }
+        }
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const isNomeValid = validateField(nome, 'nomeError');
+            const isCognomeValid = validateField(cognome, 'cognomeError');
+            const isEmailValid = validateEmail();
+            const isPasswordValid = validatePassword();
+            
+            if (isNomeValid && isCognomeValid && isEmailValid && isPasswordValid) {
+                showSuccessModal();
+            }
+        });
+
+        function showSuccessModal() {
+            document.getElementById('overlay').classList.add('show');
+            document.getElementById('successModal').classList.add('show');
+        }
+
+        function closeModal() {
+            document.getElementById('overlay').classList.remove('show');
+            document.getElementById('successModal').classList.remove('show');
+            form.reset();
+            [nome, cognome, email, password].forEach(field => {
+                field.classList.remove('error', 'success');
+            });
+            ['req-length', 'req-uppercase', 'req-special'].forEach(reqId => {
+                document.getElementById(reqId).classList.remove('requirement-met');
+            });
+        }
+    </script>
+</body>
+</html>
