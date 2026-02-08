@@ -1,157 +1,133 @@
-
-<!DOCTYPE html>
+!DOCTYPE html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <title>Visualizzazione Persone</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        table {
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        th, td {
-            border: 1px solid black;
-            padding: 8px;
-        }
-        th {
-            background-color: #f0f0f0;
-        }
-        button {
-            margin-top: 20px;
-            padding: 5px 10px;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Anagrafica Utente Terza</title>
+<style>
+body {
+  background-color: #121212;
+  color: #eee;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 20px;
+}
+h2 {
+  border-bottom: 2px solid #ff4757;
+  padding-bottom: 10px;
+  color: #ff6b81;
+  margin-top: 0;
+}
+label {
+  display: block;
+  margin-top: 12px;
+}
+input[type="text"], select {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  border-radius: 6px;
+  border: 1px solid #555;
+  background-color: #1e1e1e;
+  color: #eee;
+}
+.gruppo-radio label, .gruppo-checkbox label {
+  display: inline-block;
+  margin-right: 10px;
+  font-weight: normal;
+}
+button {
+  margin-top: 20px;
+  padding: 10px 15px;
+  width: 100%;
+  border: none;
+  border-radius: 6px;
+  background-color: #ff4757;
+  color: #fff;
+  cursor: pointer;
+  font-size: 16px;
+}
+button:hover {
+  background-color: #ff6b81;
+}
+#output {
+  margin-top: 25px;
+  padding: 15px;
+  background-color: #1e1e1e;
+  border-radius: 8px;
+  color: #fff;
+}
+#output p {
+  margin: 8px 0;
+}
+</style>
 </head>
 <body>
-    <h2>Visualizzazione Persone</h2>
-    
-    <table>
-        <thead>
-            <tr>
-                <th>Indice</th>
-                <th>Nome</th>
-                <th>Cognome</th>
-                <th>Età</th>
-            </tr>
-        </thead>
-        <tbody id="tabella"></tbody>
-    </table>
 
-    <button onclick="location.href='anagraficautenteterza.html'">Torna Indietro</button>
+<main>
+  <section>
+    <h2>Anagrafica Terza</h2>
 
-    <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        const indici = urlParams.get('indici').split(',');
-        const personw = JSON.parse(localStorage.getItem('persone'));
+    <label>nome:</label>
+    <input type="text" id="nome">
 
-        const tbody = document.getElementById('tabella');
+    <label>cognome:</label>
+    <input type="text" id="cognome">
 
-        persone.forEach((p, i) => {
-            const row = `<tr>
-                <td>${indici[i]}</td>
-                <td>${p.nome}</td>
-                <td>${p.cognome}</td>
-                <td>${p.eta}</td>
-            </tr>`;
-            tbody.innerHTML += row;
-        });
-    </script>
+    <label>città:</label>
+    <input type="text" id="citta">
+
+    <label>anno di nascita:</label>
+    <input type="text" id="anno" placeholder="es: 2000">
+
+    <label>sesso:</label>
+    <div class="gruppo-radio">
+      <label><input type="radio" name="sesso" value="maschio"> maschio</label>
+      <label><input type="radio" name="sesso" value="femmina"> femmina</label>
+      <label><input type="radio" name="sesso" value="altro"> altro</label>
+    </div>
+
+    <button onclick="mostraPersona()">mostra dati</button>
+
+    <div id="output">inserisci i dati della persona</div>
+
+  </section>
+</main>
+
+<script>
+function mostraPersona(){
+  var persona = {
+    nome: document.getElementById("nome").value,
+    cognome: document.getElementById("cognome").value,
+    citta: document.getElementById("citta").value,
+    anno: document.getElementById("anno").value,
+    sesso: (function(){
+      var s = document.querySelector('input[name="sesso"]:checked');
+      return s ? s.value : "non specificato";
+    })()
+  };
+
+  var eta = "";
+  if(persona.anno && !isNaN(persona.anno)){
+    var annoNum = parseInt(persona.anno);
+    var annoCorrente = new Date().getFullYear();
+    eta = annoCorrente - annoNum;
+  } else {
+    eta = "anno non valido";
+  }
+
+  var risultato = "";
+  risultato += "<p><strong>nome:</strong> " + persona.nome + "</p>";
+  risultato += "<p><strong>cognome:</strong> " + persona.cognome + "</p>";
+  risultato += "<p><strong>città:</strong> " + persona.citta + "</p>";
+  risultato += "<p><strong>anno di nascita:</strong> " + persona.anno + "</p>";
+  risultato += "<p><strong>sesso:</strong> " + persona.sesso + "</p>";
+  risultato += "<p><strong>età:</strong> " + eta + "</p>";
+
+  document.getElementById("output").innerHTML = risultato;
+}
+</script>
+
 </body>
 </html>
 
-Anagrafica Input
-<!DOCTYPE html>
-<html lang="it">
-<head>
-    <meta charset="UTF-8">
-    <title>Input Anagrafica</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        input {
-            margin: 5px;
-            padding: 5px;
-        }
-        button {
-            margin: 5px;
-            padding: 5px 10px;
-        }
-    </style>
-</head>
-<body>
-    <h2>Inserimento Persone</h2>
-    
-    <label>Nome: <input type="text" id="nome"></label><br>
-    <label>Cognome: <input type="text" id="cognome"></label><br>
-    <label>Età: <input type="number" id="eta"></label><br>
-    
-    <button onclick="aggiungi()">Aggiungi</button>
-    <button onclick="invia()">Invia</button>
-    
-    <h3>Lista (<span id="count">0</span>)</h3>
-    <div id="lista"></div>
-
-    <script>
-        let persone = [];
-        let indice = 1;
-
-        function aggiungi() {
-            const nome = document.getElementById('nome').value.trim();
-            const cognome = document.getElementById('cognome').value.trim();
-            const eta = document.getElementById('eta').value.trim();
-
-            if (!nome || !cognome || !eta) {
-                alert('Compila tutti i campi');
-                return;
-            }
-
-            persone.push({
-                indice: String(indice).padStart(2, '0'),
-                nome: nome,
-                cognome: cognome,
-                eta: eta
-            });
-
-            indice++;
-            mostraLista();
-            
-            document.getElementById('nome').value = '';
-            document.getElementById('cognome').value = '';
-            document.getElementById('eta').value = '';
-        }
-
-        function mostraLista() {
-            document.getElementById('count').textContent = persone.length;
-            const html = persone.map(p => 
-                `<div>${p.indice} - ${p.nome} ${p.cognome}, ${p.eta} anni</div>`
-            ).join('');
-            document.getElementById('lista').innerHTML = html;
-        }
-
-        function invia() {
-            if (persone.length === 0) {
-                alert('Aggiungi almeno una persona');
-                return;
-            }
-
-            const dati = persone.map(p => ({
-                nome: p.nome,
-                cognome: p.cognome,
-                eta: p.eta
-            }));
-
-            localStorage.setItem('persone', JSON.stringify(dati));
-
-            const indici = persone.map(p => p.indice).join(',');
-
-            window.location.href = `visualizza.html?indici=${indici}`;
-        }
-    </script>
-</body>
-</html>
