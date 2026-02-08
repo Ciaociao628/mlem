@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Visualizzazione Persone</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        table {
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+        }
+        th {
+            background-color: #f0f0f0;
+        }
+        button {
+            margin-top: 20px;
+            padding: 5px 10px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Visualizzazione Persone</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Indice</th>
+                <th>Nome</th>
+                <th>Cognome</th>
+                <th>Età</th>
+            </tr>
+        </thead>
+        <tbody id="tabella"></tbody>
+    </table>
+
+    <button onclick="location.href='anagraficautentequarta.html'">Torna Indietro</button>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const indici = urlParams.get('indici').split(',');
+        const persone = JSON.parse(localStorage.getItem('persone'));
+
+        const tbody = document.getElementById('tabella');
+
+        persone.forEach((p, i) => {
+            const row = `<tr>
+                <td>${indici[i]}</td>
+                <td>${p.nome}</td>
+                <td>${p.cognome}</td>
+                <td>${p.eta}</td>
+            </tr>`;
+            tbody.innerHTML += row;
+        });
+    </script>
+</body>
+</html>
