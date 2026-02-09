@@ -1,63 +1,36 @@
 <!DOCTYPE html>
-<html lang="it">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Visualizzazione Persone</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        table {
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        th, td {
-            border: 1px solid black;
-            padding: 8px;
-        }
-        th {
-            background-color: #f0f0f0;
-        }
-        button {
-            margin-top: 20px;
-            padding: 5px 10px;
-        }
-    </style>
+    <title>Visualizza</title>
 </head>
 <body>
-    <h2>Visualizzazione Persone</h2>
-    
-    <table>
-        <thead>
-            <tr>
-                <th>Indice</th>
-                <th>Nome</th>
-                <th>Cognome</th>
-                <th>Età</th>
-            </tr>
-        </thead>
-        <tbody id="tabella"></tbody>
-    </table>
 
-    <button onclick="location.href='anagraficautentequarta.html'">Torna Indietro</button>
+<table border="1">
+    <tr>
+        <th>Indice</th>
+        <th>Nome</th>
+        <th>Cognome</th>
+        <th>Età</th>
+    </tr>
+    <tbody id="tabella"></tbody>
+</table>
 
-    <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        const indici = urlParams.get('indici').split(',');
-        const persone = JSON.parse(localStorage.getItem('persone'));
+<script>
+    var persone = JSON.parse(localStorage.getItem("persone"));
+    var tbody = document.getElementById("tabella");
 
-        const tbody = document.getElementById('tabella');
+    for (var i = 0; i < persone.length; i++) {
+        var riga = "<tr>";
+        riga += "<td>" + persone[i].indice + "</td>";
+        riga += "<td>" + persone[i].nome + "</td>";
+        riga += "<td>" + persone[i].cognome + "</td>";
+        riga += "<td>" + persone[i].eta + "</td>";
+        riga += "</tr>";
 
-        persone.forEach((p, i) => {
-            const row = `<tr>
-                <td>${indici[i]}</td>
-                <td>${p.nome}</td>
-                <td>${p.cognome}</td>
-                <td>${p.eta}</td>
-            </tr>`;
-            tbody.innerHTML += row;
-        });
-    </script>
+        tbody.innerHTML += riga;
+    }
+</script>
+
 </body>
 </html>
+
