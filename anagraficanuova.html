@@ -1,0 +1,269 @@
+
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anagrafica nuova</title>
+    <style>
+        :root {
+            --color-bg-base: #0f172a;
+            --color-surface: #1e293b;
+            --color-text-primary: #f1f5f9;
+            --color-text-secondary: #cbd5e1;
+            --color-primary: #38bdf8;
+            --color-primary-hover: #0ea5e9;
+            --color-error: #ef4444;
+            --color-success: #10b981;
+            --color-border: rgba(203, 213, 225, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--color-bg-base);
+            color: var(--color-text-primary);
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: var(--color-surface);
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--color-primary);
+            font-size: 1.8rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--color-text-secondary);
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        input[type="text"],
+        input[type="email"] {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--color-border);
+            border-radius: 8px;
+            background: var(--color-bg-base);
+            color: var(--color-text-primary);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.1);
+        }
+
+        input.error {
+            border-color: var(--color-error);
+        }
+
+        input.success {
+            border-color: var(--color-success);
+        }
+
+        .error-message {
+            color: var(--color-error);
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .hint {
+            color: var(--color-text-secondary);
+            font-size: 0.8rem;
+            margin-top: 0.3rem;
+        }
+
+        button {
+            width: 100%;
+            padding: 1rem;
+            background: var(--color-primary);
+            color: var(--color-bg-base);
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        button:hover {
+            background: var(--color-primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(56, 189, 248, 0.3);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .lista {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 2px solid var(--color-border);
+        }
+
+        .lista h2 {
+            color: var(--color-primary);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .persona-card {
+            background: var(--color-bg-base);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 0.75rem;
+            border-left: 4px solid var(--color-primary);
+        }
+
+        .empty-state {
+            text-align: center;
+            color: var(--color-text-secondary);
+            padding: 2rem;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Anagrafica nuova</h1>
+        
+        <form id="anagraficaForm">
+            <div class="form-group">
+                <label for="nome">Nome *</label>
+                <input type="text" id="nome" required>
+                <div class="hint">Solo lettere maiuscole/minuscole</div>
+                <div class="error-message" id="nomeError"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="cognome">Cognome *</label>
+                <input type="text" id="cognome" required>
+                <div class="hint">Solo lettere maiuscole/minuscole</div>
+                <div class="error-message" id="cognomeError"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="cap">CAP *</label>
+                <input type="text" id="cap" required maxlength="5">
+                <div class="hint">Solo 5 numeri</div>
+                <div class="error-message" id="capError"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="username">Username *</label>
+                <input type="text" id="username" required>
+                <div class="hint">3-16 caratteri: lettere, numeri, caratteri speciali</div>
+                <div class="error-message" id="usernameError"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email *</label>
+                <input type="email" id="email" required>
+                <div class="hint">Formato email valido</div>
+                <div class="error-message" id="emailError"></div>
+            </div>
+
+            <button type="submit">Registrati</button>
+        </form>
+
+    </div>
+
+    <script>
+        const form = document.getElementById('anagraficaForm');
+        const nome = document.getElementById('nome');
+        const cognome = document.getElementById('cognome');
+        const cap = document.getElementById('cap');
+        const username = document.getElementById('username');
+        const email = document.getElementById('email');
+
+        // Regex per validazione
+        const regexNome = /^[A-Za-z]+$/;
+        const regexCognome = /^[A-Za-z]+$/;
+        const regexCAP = /^\d{5}$/;
+        const regexUsername = /^[A-Za-z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{3,16}$/;
+        const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        // Validazione in tempo reale
+        nome.addEventListener('blur', () => validateField(nome, regexNome, 'nomeError', 'Nome non valido (solo lettere)'));
+        cognome.addEventListener('blur', () => validateField(cognome, regexCognome, 'cognomeError', 'Cognome non valido (solo lettere)'));
+        cap.addEventListener('blur', () => validateField(cap, regexCAP, 'capError', 'CAP non valido (5 cifre)'));
+        username.addEventListener('blur', () => validateField(username, regexUsername, 'usernameError', 'Username non valido (3-16 caratteri)'));
+        email.addEventListener('blur', () => validateField(email, regexEmail, 'emailError', 'Email non valida'));
+
+        function validateField(field, regex, errorId, errorMsg) {
+            const errorElement = document.getElementById(errorId);
+            const value = field.value.trim();
+
+            if (value === '') {
+                field.classList.add('error');
+                field.classList.remove('success');
+                errorElement.textContent = 'Campo obbligatorio';
+                errorElement.classList.add('show');
+                return false;
+            } else if (!regex.test(value)) {
+                field.classList.add('error');
+                field.classList.remove('success');
+                errorElement.textContent = errorMsg;
+                errorElement.classList.add('show');
+                return false;
+            } else {
+                field.classList.remove('error');
+                field.classList.add('success');
+                errorElement.classList.remove('show');
+                return true;
+            }
+        }
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const isNomeValid = validateField(nome, regexNome, 'nomeError', 'Nome non valido (solo lettere)');
+            const isCognomeValid = validateField(cognome, regexCognome, 'cognomeError', 'Cognome non valido (solo lettere)');
+            const isCapValid = validateField(cap, regexCAP, 'capError', 'CAP non valido (5 cifre)');
+            const isUsernameValid = validateField(username, regexUsername, 'usernameError', 'Username non valido (3-16 caratteri)');
+            const isEmailValid = validateField(email, regexEmail, 'emailError', 'Email non valida');
+
+            if (isNomeValid && isCognomeValid && isCapValid && isUsernameValid && isEmailValid) {
+                alert('✓ Registrazione completata con successo!');
+                form.reset();
+                
+                [nome, cognome, cap, username, email].forEach(field => {
+                    field.classList.remove('error', 'success');
+                });
+            }
+        });
+    </script>
+</body>
+</html>
